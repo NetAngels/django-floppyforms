@@ -5,4 +5,4 @@
 {% endif %}<br />
 {% trans "Change:" %}
 {% endif %}
-<input type="{{ type }}" name="{{ name }}"{% if required %} required{% endif %}{% include "floppyforms/attrs.html" %}>
+<input type="{{ type }}" name="{{ name }}"{% if USE_REQUIRE_ATTR and required %} required{% endif %}{% include "floppyforms/attrs.html" %}>

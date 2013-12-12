@@ -15,6 +15,8 @@ from django.utils import datetime_safe, formats, six
 from django.utils.dates import MONTHS
 from django.utils.encoding import force_text
 
+from .config import USE_HTML5_TYPES, USE_REQUIRE_ATTR
+
 
 RE_DATE = re.compile(r'(\d{4})-(\d\d?)-(\d\d?)$')
 
@@ -62,6 +64,7 @@ class Input(Widget):
             'hidden': self.is_hidden,
             'required': self.is_required,
             'True': True,
+            'USE_REQUIRE_ATTR': USE_REQUIRE_ATTR
         }
         # True is injected in the context to allow stricter comparisons
         # for widget attrs. See #25.
@@ -244,7 +247,7 @@ class Textarea(Input):
 
 
 class DateInput(Input):
-    input_type = 'date'
+    input_type = 'date' if USE_HTML5_TYPES else 'text'
 
     def __init__(self, attrs=None, format=None):
         super(DateInput, self).__init__(attrs)
@@ -274,7 +277,7 @@ class DateInput(Input):
 
 
 class DateTimeInput(Input):
-    input_type = 'datetime'
+    input_type = 'datetime' if USE_HTML5_TYPES else 'text'
 
     def __init__(self, attrs=None, format=None):
         super(DateTimeInput, self).__init__(attrs)
@@ -304,7 +307,7 @@ class DateTimeInput(Input):
 
 
 class TimeInput(Input):
-    input_type = 'time'
+    input_type = 'time' if USE_HTML5_TYPES else 'text'
 
     def __init__(self, attrs=None, format=None):
         super(TimeInput, self).__init__(attrs)
@@ -333,23 +336,23 @@ class TimeInput(Input):
 
 
 class SearchInput(Input):
-    input_type = 'search'
+    input_type = 'search' if USE_HTML5_TYPES else 'text'
 
 
 class EmailInput(TextInput):
-    input_type = 'email'
+    input_type = 'email' if USE_HTML5_TYPES else 'text'
 
 
 class URLInput(TextInput):
-    input_type = 'url'
+    input_type = 'url' if USE_HTML5_TYPES else 'text'
 
 
 class ColorInput(Input):
-    input_type = 'color'
+    input_type = 'color' if USE_HTML5_TYPES else 'text'
 
 
 class NumberInput(TextInput):
-    input_type = 'number'
+    input_type = 'number' if USE_HTML5_TYPES else 'text'
     min = None
     max = None
     step = None
@@ -591,7 +594,8 @@ class SelectDateWidget(forms.Widget):
         context = {
             'year_field': self.year_field % name,
             'month_field': self.month_field % name,
-            'day_field': self.day_field % name
+            'day_field': self.day_field % name,
+            'USE_REQUIRE_ATTR': USE_REQUIRE_ATTR
         }
         context.update(extra_context)
 
